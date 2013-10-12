@@ -1,0 +1,102 @@
+module RubiksCube
+	class RubiksCube
+		def initialize()
+			@faces = {
+				"up" => [["W", "W", "W"], ["W", "W", "W"],
+					["W","W","W"]],
+				"front" => [["R", "R", "R"], ["R", "R", "R"], 
+						["R", "R", "R"]],
+				"right" => [["B", "B", "B"], ["B", "B", "B"],
+					["B", "B", "B"]],
+				"left" => [["G", "G", "G"], ["G", "G", "G"],
+					["G", "G", "G"]],
+				"down" => [["Y", "Y", "Y"], ["Y", "Y", "Y"],
+					["Y", "Y", "Y"]],
+				"back" => [["O", "O", "O"], ["O", "O", "O"],
+					["O", "O", "O"]]	
+			}
+		end
+		def turn(move, attribute)
+			# move is a char
+			# attribute is an integer-
+			# 1 = normal, 2 = 180, 3 = inverse
+			temp = "" # define the temp var now
+			side = ""			
+			case move
+			when " "
+				return
+			end
+			when "R"
+				side = "right"
+			end
+			when "F"
+				side = "front"
+			end
+			when "L"
+				side = "left"
+			end
+			when "U"
+				side = "up"
+			end
+			when "D"
+				side = "down"
+			end
+			when "B"
+				side = "back"
+			end
+			# TODO write in code for XYZ turns
+
+			# the attribute is actually the amount of times we need to turn it!
+			attribute.times do
+				# right face clockwise
+				# corners
+				temp = @faces["right"][0][2]
+				@faces["right"][0][2] = @faces["right"][0][0]
+				@faces["right"][0][0] = @faces["right"][2][0]
+				@faces["right"][2][0] = @faces["right"][2][2]
+				@faces["right"][2][2] = temp
+				# edges
+				temp = @faces["right"][0][1]
+				@faces["right"][0][1] = @faces["right"][1][0]
+				@faces["right"][1][0] = @faces["right"][2][1]
+				@faces["right"][2][1] = @faces["right"][1][2]
+				@faces["right"][1][2] = temp
+				#other sides
+				for i in 0..2
+					temp = @faces["up"][i][2]
+					@faces["up"][i][2] = @faces["front"][i][2]
+					@faces["front"][i][2] = @faces["down"][i][2]
+					@faces["down"][i][2] = @faces["back"][i][2]
+					@faces["back"][i][2] = temp
+				end
+			end
+		end
+		def execute(moves)
+			#TODO assert that moves is string
+			raise NotImplementedError
+			moves.foreach do |m|
+				valid = false
+				valid_moves = "FRULDBxyz2' " # no middle slices
+				valid_moves.foreach do |n|
+					valid = true if m === n
+				end
+				raise "Invalid move sequence" if !valid
+			end
+			counter = 0
+			while counter < moves.length
+				move = moves[counter]
+				attribute = 1
+				if moves[counter + 1] == "2"
+					attribute = 2
+					counter++
+				end
+				if moves[counter + 1] == "3"
+					attribute = 3
+					counter++
+				end
+				turn(move, attribute)
+				counter++
+			end
+		end
+	end
+end
