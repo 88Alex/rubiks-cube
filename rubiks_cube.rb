@@ -1,3 +1,4 @@
+require "colorize"
 module RubiksCube
 	class RubiksCube
 		def initialize()
@@ -21,28 +22,28 @@ module RubiksCube
 			# attribute is an integer-
 			# 1 = normal, 2 = 180, 3 = inverse
 			temp = "" # define the temp var now
-			side = ""			
+			side = side1 = side2 = side3 = side4 = ""			
 			case move
 			when " "
 				return
-			end
 			when "R"
-				side = "right"
-			end
+				side = "right"; side1 = "up"; side2 = "front"
+				side3 = "down"; side4 = "back"
 			when "F"
-				side = "front"
-			end
+				side = "front"; side1 = "up"; side2 = "left"
+				side3 = "down"; side4 = "right"
 			when "L"
-				side = "left"
-			end
+				side = "left"; side1 = "up"; side2 = "back"
+				side3 = "down"; side4 = "front"
 			when "U"
-				side = "up"
-			end
+				side = "up"; side1 = "front"; side2 = "right"
+				side3 = "back"; side4 = "left";
 			when "D"
-				side = "down"
-			end
+				side = "down"; side1 = "front"; side2 = "left"
+				side3 = "back"; side4 = "right"
 			when "B"
-				side = "back"
+				side = "back"; side1 = "up"; side2 = "right"
+				side3 = "down"; side4 = "left"
 			end
 			# TODO write in code for XYZ turns
 
@@ -63,11 +64,11 @@ module RubiksCube
 				@faces[side][1][2] = temp
 				#other sides
 				for i in 0..2
-					temp = @faces["up"][i][2]
-					@faces["up"][i][2] = @faces["front"][i][2]
-					@faces["front"][i][2] = @faces["down"][i][2]
-					@faces["down"][i][2] = @faces["back"][i][2]
-					@faces["back"][i][2] = temp
+					temp = @faces[side1][i][2]
+					@faces[side1][i][2] = @faces[side2][i][2]
+					@faces[side2][i][2] = @faces[side3][i][2]
+					@faces[side3][i][2] = @faces[side4][i][2]
+					@faces[side4][i][2] = temp
 				end
 			end
 		end
@@ -88,15 +89,70 @@ module RubiksCube
 				attribute = 1
 				if moves[counter + 1] == "2"
 					attribute = 2
-					counter++
+					counter = counter + 1
 				end
 				if moves[counter + 1] == "3"
 					attribute = 3
-					counter++
+					counter = counter + 1
 				end
 				turn(move, attribute)
-				counter++
+				counter = counter + 1
+			end
+		end
+		def print_facelet(facelet)
+			case facelet
+			when "G"
+				putc facelet.green
+			when "R"
+				putc facelet.red
+			when "B"
+				putc facelet.blue
+			when "Y"
+				putc facelet.yellow
+			when "O"
+				putc facelet.purple
+			when "W"
+				putc facelet
+			end
+		end
+		def prettyprint
+			# print back face
+			for i in 0..2
+				print "        "
+				for j in 0..2
+					print_facelet(@faces["back"][i][j])
+					putc " "
+				end
+				puts
+			end
+			# print up face
+			for i in 0..2
+				print "        "
+				for j in 0..2
+					print_facelet(@faces["up"][i][j])
+					putc " "
+				end
+				puts
+			end
+			# left front right
+			for i in 0..2
+				for face in ["left", "front", "right"]
+					for j in 0..2
+						print_facelet(@faces[face][i][j])
+						putc " "
+					end
+				puts
+			end
+			# print down face
+			for i in 0..2
+				print "        "
+				for j in 0..2
+					print_facelet(@faces["down"][i][j])
+					putc " "
+				end
+				puts
 			end
 		end
 	end
 end
+end # to satisfy Ruby
