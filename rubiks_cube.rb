@@ -74,7 +74,6 @@ module RubiksCube
 		end
 		def execute(moves)
 			#TODO assert that moves is string
-			raise NotImplementedError
 			moves.foreach do |m|
 				valid = false
 				valid_moves = "FRULDBxyz2' " # no middle slices
@@ -102,52 +101,63 @@ module RubiksCube
 		def print_facelet(facelet)
 			case facelet
 			when "G"
-				putc facelet.green
+				putc facelet.colorize(:green)
 			when "R"
-				putc facelet.red
+				putc facelet.colorize(:red)
 			when "B"
-				putc facelet.blue
+				putc facelet.colorize(:blue)
 			when "Y"
-				putc facelet.yellow
+				putc facelet.colorize(:yellow)
 			when "O"
-				putc facelet.purple
+				putc facelet.colorize(:orange)
 			when "W"
 				putc facelet
 			end
 		end
 		def prettyprint
-			# print back face
+			puts "Back: "
 			for i in 0..2
-				print "        "
 				for j in 0..2
-					print_facelet(@faces["back"][i][j])
+					putc @faces["back"][i][j]
 					putc " "
 				end
 				puts
 			end
-			# print up face
+			puts "Up: "
 			for i in 0..2
-				print "        "
 				for j in 0..2
-					print_facelet(@faces["up"][i][j])
+					putc @faces["up"][i][j]
 					putc " "
 				end
 				puts
 			end
-			# left front right
+			puts "Left: "
 			for i in 0..2
-				for face in ["left", "front", "right"]
-					for j in 0..2
-						print_facelet(@faces[face][i][j])
-						putc " "
-					end
+				for j in 0..2
+					putc @faces["left"][i][j]
+					putc " "
+				end
+			end
+			puts "Front: "
+			for i in 0..2
+				for j in 0..2
+					puts @faces["front"][i][j]
+					putc " "
+				end
 				puts
 			end
-			# print down face
+			puts "Right: "
 			for i in 0..2
-				print "        "
 				for j in 0..2
-					print_facelet(@faces["down"][i][j])
+					puts @faces["right"][i][j]
+					putc " "
+				end
+				puts
+			end
+			puts "Down: "
+			for i in 0..2
+				for j in 0..2
+					puts @faces["down"][i][j]
 					putc " "
 				end
 				puts
@@ -155,4 +165,3 @@ module RubiksCube
 		end
 	end
 end
-end # to satisfy Ruby
